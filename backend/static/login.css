@@ -7,7 +7,6 @@
     align-items: center;
     justify-content: center;
 }
-
 h1 {
     font-size: 2.2rem;
     font-weight: 700;
@@ -76,4 +75,36 @@ button {
 input[type="submit"]:hover {
     background: linear-gradient(90deg, #b3ffd9 0%, #b3e0ff 100%);
     transform: translateY(-2px) scale(1.03);
+}
+
+@media(max-width:1080px) {
+    html {
+        padding: 0;
+        margin: 0;
+    }
+    body {
+        font-size: 2rem;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    form {
+        width: 70%;
+        max-width: 728px;
+        font-size: 1.8rem;
+    }
+    button {
+        background: #080ba8;
+        color: #fff;
+        border: none;
+        border-radius: 14px;
+        padding: 2rem 1.2;
+        width: 16rem;
+        font-size: 1.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(108,99,255,0.12);
+        transition: background 0.3s, transform 0.2s;
+        margin: 0 auto;
+    }
 }
