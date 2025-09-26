@@ -105,19 +105,28 @@ def landing_page(request):
 
 @login_required
 def start_page(request):
+    # Get all user meals and sum up calories and nutrients
     saved_meals = Meal.objects.filter(user=request.user, saved=True)
     today_meals = Meal.objects.filter(user=request.user, date=timezone.now().date())
     total_calories = np.round(sum([meal.total_calories for meal in today_meals]), 2)
     total_proteins = np.round(sum([meal.total_proteins for meal in today_meals]), 2)
     total_carbs = np.round(sum([meal.total_carbs for meal in today_meals]), 2)
     total_fats = np.round(sum([meal.total_fats for meal in today_meals]), 2)
+
+    # Get the daily nutrient targest for the user
+    profile = Profile.objects.get(user=request.user)
+
     context = {"saved_meals": saved_meals, "choose_meal": False,
                "total_calories": total_calories, "total_proteins": total_proteins,
-               "total_carbs": total_carbs, "total_fats": total_fats}
+               "total_carbs": total_carbs, "total_fats": total_fats, "user_daily_calories": profile.calories,
+               "user_daily_proteins": profile.proteins, "user_daily_carbs": profile.carbs, 
+               "user_daily_fats": profile.fats}
+    
     if request.method == "POST":
         context["choose_meal"] = True
 
     return render(request, "backend/start_page.html", context)
+
 
 @login_required
 def upload_photo(request, option=None):
@@ -256,6 +265,7 @@ def profile(request):
 def advisor(request):
     context = {}
     return render(request, "backend/profile.html", context)
+
 
 @login_required
 def meal_summary(request, option):

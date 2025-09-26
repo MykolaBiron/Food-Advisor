@@ -74,12 +74,6 @@ form.upload-form {
     cursor: pointer;
     transition: box-shadow 0.2s;
 }
-.progress-bars {
-    height: 20vh;
-    background-color: #333;
-    width: 100%;
-}
-
 .upload-area:hover {
     box-shadow: 0 8px 32px rgba(33,150,243,0.18);
 }
@@ -155,7 +149,7 @@ input[type="submit"]:hover {
     background-color: #080ba8;
     border-radius: 10px;
     border: none;
-    width: 12rem;
+    width: 16rem;
 }
 
 .spinner {
