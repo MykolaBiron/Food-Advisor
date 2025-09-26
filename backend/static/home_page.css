@@ -170,3 +170,11 @@ input[type="submit"]:hover {
 @keyframes spin {
   100% { transform: rotate(360deg); }
 }
+
+@media(max-width: 1080px) {
+    .meal-options {
+        display: block;
+        width: 100%;
+        font-size: 24px;
+    }
+}

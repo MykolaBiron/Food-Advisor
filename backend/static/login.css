@@ -1,6 +1,7 @@
  body {
     min-height: 100vh;
     margin: 0;
+    padding: 1rem;
     font-family: 'Inter', sans-serif;
     background: linear-gradient(135deg, #b3e0ff 0%, #b3ffd9 100%);
     display: flex;
@@ -17,59 +18,112 @@ h1 {
 
 h2 {
     text-align: center;
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    font-weight: 600;
 }
 
 p {
-    margin-top: 0.3rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+/* Form field labels */
+form p label {
+    display: block;
+    text-align: left;
+    font-weight: 500;
+    color: #333;
     margin-bottom: 0.3rem;
+    font-size: 0.95rem;
+}
+
+/* Error messages */
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0.3rem 0;
+    color: #dc3545;
+    font-size: 0.85rem;
+}
+
+/* Register link styling */
+main > p:last-child {
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+}
+
+main > p:last-child a {
+    color: #080ba8;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+main > p:last-child a:hover {
+    text-decoration: underline;
+}
+
+main {
+    background-color: #fff;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    padding: 2rem;
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
 }
 
 form {
-    background-color: #fff;
-    border-radius: 24px;
-    font-size: 20px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-    padding: 2.5rem 3rem;
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-    margin-top: 1.2rem;
+    gap: 1rem;
+    margin-top: 1rem;
 }
 
 input[type="text"],
 input[type="password"] {
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    border: 1px solid #b3e0ff;
-    font-size: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 2px solid #e3f2fd;
+    font-size: 1.1rem;
     background: #f7fbff;
     color: #333;
     box-shadow: 0 2px 8px rgba(108,99,255,0.08);
     outline: none;
-    transition: border 0.2s;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus {
-    border: 1.5px solid #6c63ff;
+    border: 2px solid #080ba8;
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(8,11,168,0.15);
 }
 
 button {
     background: #080ba8;
     color: #fff;
     border: none;
-    border-radius: 8px;
-    padding: 0.8rem 0;
-    width: 10rem;
-    font-size: 1rem;
+    border-radius: 12px;
+    padding: 1rem 2rem;
+    width: 100%;
+    font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(108,99,255,0.12);
-    transition: background 0.3s, transform 0.2s;
-    margin: 0 auto;
+    box-shadow: 0 4px 15px rgba(8,11,168,0.3);
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+button:hover {
+    background: #0608a0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(8,11,168,0.4);
 }
 
 input[type="submit"]:hover {
@@ -77,46 +131,62 @@ input[type="submit"]:hover {
     transform: translateY(-2px) scale(1.03);
 }
 
-@media(max-width:1080px) {
-    html {
-        padding: 0;
-        margin: 0;
-    }
+/* Mobile styles */
+@media (max-width: 768px) {
     body {
-        font-size: 1.6rem;
-        width: 100%;
-        padding: 0;
-        margin: 0;
+        padding: 0.5rem;
     }
-    form {
-        width: 70%;
-        max-width: 728px;
-        font-size: 1.6rem;
+    
+    main {
+        width: 75%;
+        max-width: none;
+        padding: 2rem 1.5rem;
+        border-radius: 20px;
     }
-    button {
-        background: #080ba8;
-        color: #fff;
-        border: none;
-        border-radius: 14px;
-        padding: 2rem 1.2;
-        width: 13.5rem;
-        font-size: 1.6rem;
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: 0 2px 8px rgba(108,99,255,0.12);
-        transition: background 0.3s, transform 0.2s;
-        margin: 0 auto;
+    
+    h2 {
+        font-size: 1.8rem;
+        margin-bottom: 1.2rem;
     }
+    
     input[type="text"],
     input[type="password"] {
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
-        border: 1px solid #b3e0ff;
+        padding: 1.2rem;
+        font-size: 1rem;
+        border-radius: 10px;
+    }
+    
+    button {
+        padding: 1.2rem;
+        font-size: 1.1rem;
+        border-radius: 10px;
+    }
+    
+    p {
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+}
+
+/* Small mobile styles */
+@media (max-width: 480px) {
+    main {
+        width: 85%;
+        padding: 1.5rem 1rem;
+    }
+    
+    h2 {
         font-size: 1.6rem;
-        background: #f7fbff;
-        color: #333;
-        box-shadow: 0 2px 8px rgba(108,99,255,0.08);
-        outline: none;
-        transition: border 0.2s;
+    }
+    
+    input[type="text"],
+    input[type="password"] {
+        padding: 1rem;
+        font-size: 0.95rem;
+    }
+    
+    button {
+        padding: 1rem;
+        font-size: 1rem;
     }
 }

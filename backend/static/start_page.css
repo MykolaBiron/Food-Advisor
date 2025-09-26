@@ -289,4 +289,7 @@ svg {
     input[type="submit"] {
         font-size: 2rem;
     }
+    .meal-photo-btn, .choose-meal-btn {
+        border-radius: 18px;
+    }
 }
