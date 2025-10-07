@@ -16,7 +16,7 @@ nav {
 
 .nav-link {
     color: black;
-    outline: none;
+    text-decoration: none;
 }
 
 main {
@@ -34,8 +34,18 @@ main > div {
     max-width: 1000px;
     width: 100%;
     text-align: center;
-    margin-left: 0;
-    margin-right: 0;
+    margin: 0 auto;
+}
+
+/* Black container styling */
+.content-container {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    padding: 2rem;
+    text-align: center;
+    color: white;
+    margin: 0 auto;
 }
 
 h1 {
@@ -104,7 +114,7 @@ form.upload-form {
     width: 12rem;
     padding: 1.2rem 0;
     border-radius: 12px;
-    background-color: #080ba8;
+    background-color: #07c550;
     border: none;
     margin: 0.4rem;
     cursor: pointer;
@@ -268,25 +278,142 @@ svg {
     margin-bottom: 0.5rem;
 }
 
-@media(max-width:1080px) {
+/* Mobile styles for tablets and phones */
+@media (max-width: 768px) {
     body {
-        font-size: 2rem;
+        padding: 0.5rem;
+        font-size: 1rem;
     }
+    
     nav {
-        font-size: 1.4rem;
+        font-size: 0.9rem;
+        padding: 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
     }
+    
     .logout {
         font-size: inherit;
     }
+    
+    main {
+        padding: 0.5rem;
+        min-height: calc(100vh - 100px);
+    }
+    
     main > div {
-        background: rgba(255,255,255,0.95);
-        border-radius: 24px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-        padding: 2.5rem 3rem;
-        max-width: 1000px;
-        width: 65%;
-        text-align: center;
-        margin-left: 0;
-        margin-right: 0;
+        width: 80% !important;
+        max-width: none;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+    
+    /* Inner black container - 100% of outer container, centered */
+    main > div > div {
+        width: 100% !important;
+        margin: 0 auto !important;
+        padding: 1.5rem 1rem !important;
+        border-radius: 20px !important;
+    }
+    
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    h2 {
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .summary {
+        flex-direction: column;
+        gap: 1rem;
+        margin: 1.5rem 0;
+        align-items: center;
+    }
+    
+    .metric {
+        height: auto;
+        margin-bottom: 0.5rem;
+    }
+    
+    svg {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .outer {
+        width: 6rem;
+        height: 6rem;
+        margin-top: -7.5rem;
+    }
+    
+    .inner {
+        width: 5.5rem;
+        height: 5.5rem;
+        font-size: 0.8rem;
+        margin-left: 0.7rem;
+    }
+    
+    .buttons {
+        flex-direction: column;
+        gap: 1rem;
+        margin: 1.5rem 0;
+        align-items: center;
+    }
+    
+    .meal-photo-btn, .choose-meal-btn {
+        width: 100%;
+        max-width: 280px;
+        font-size: 1.1rem;
+        padding: 1rem 0;
+        border-radius: 12px;
+        margin: 0;
+    }
+    
+    .modal-content {
+        width: 90%;
+        max-width: 350px;
+        margin: 20% auto;
+        padding: 1.5rem;
+    }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+    main > div {
+        width: 90% !important;
+        padding: 0.5rem;
+    }
+    
+    main > div > div {
+        padding: 1rem 0.5rem !important;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    .summary {
+        gap: 0.8rem;
+    }
+    
+    svg {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .outer {
+        width: 5rem;
+        height: 5rem;
+        margin-top: -6.5rem;
+    }
+    
+    .inner {
+        width: 4.5rem;
+        height: 4.5rem;
+        font-size: 0.7rem;
+        margin-left: 0.6rem;
     }
 }

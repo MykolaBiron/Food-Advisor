@@ -213,4 +213,13 @@ svg {
     border-radius: 8px;
     padding: 1rem 0.6rem;
 }
-
+@media(max-width: 1080px) {
+    .outer {
+        width: 6rem;
+        height: 6rem;
+    }
+    .inner {
+        width: 5.5rem;
+        height: 5.5rem;
+    }
+}
