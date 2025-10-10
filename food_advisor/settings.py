@@ -35,7 +35,7 @@ DEBUG = True
 ALLOWED_HOSTS = ["food-advisor-production-3924.up.railway.app", "localhost", "127.0.0.1"]
 
 # Uncomment for production
-#CSRF_TRUSTED_ORIGINS = ["https://food-advisor-production-3924.up.railway.app"]
+CSRF_TRUSTED_ORIGINS = ["https://food-advisor-production-3924.up.railway.app"]
 # Application definition
 
 INSTALLED_APPS = [
