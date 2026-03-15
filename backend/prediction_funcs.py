@@ -3,7 +3,10 @@ import sys
 import os
 import numpy as np
 import pandas as pd
-import tensorflow as tf
+try:
+    import tensorflow as tf  # Optional heavy dependency
+except ImportError:
+    tf = None
 import django
 from PIL import Image as PilImage
 import matplotlib.pyplot as plt
@@ -14,10 +17,14 @@ django.setup()
 from backend.models import Image
 
 #Loading the model
-try:
-    model = tf.keras.models.load_model("ml_utils/models/4_layers_model.keras")
-except Exception as e:
-    print(f"Warning: Could not load model: {e}")
+if tf is not None:
+    try:
+        model = tf.keras.models.load_model("ml_utils/models/4_layers_model.keras")
+    except Exception as e:
+        print(f"Warning: Could not load model: {e}")
+        model = None
+else:
+    print("Warning: TensorFlow is not installed; using fallback predictions.")
     model = None
 
 class_names = [
@@ -157,6 +164,8 @@ def make_prediction_path(image_path:str):
     return prediction_info
 
 def make_prediction(image: np.ndarray):
+    if model is None:
+        raise RuntimeError("Prediction model unavailable. Install tensorflow to enable this function.")
     image = np.expand_dims(image, axis=0)
     prediction = model.predict(image)
 

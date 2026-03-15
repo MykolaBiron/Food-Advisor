@@ -1,148 +1,131 @@
 {% load static %}
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{% static 'start_page.css' %}">
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" 
-        rel="stylesheet">
-    </head>
-    <body>
-        <nav>
-            {% if request.user.is_authenticated %}
-                <div class="login nav-link">
-                    <form method="post" action="{% url 'backend:logout' %}" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="logout" style="background: none; border: none; cursor: pointer;">Logout</button>
-                    </form>
-                </div>
-            {% else %}
-                <div class="login" class="nav-link"><a href="{% url 'backend:login' %}">Login</a></div>
-            {% endif %}
-            <div class="profile"><a href="{% url 'backend:profile' %}" class="nav-link">My profile</a></div>
-            <div class="advisor"><a href="{% url 'backend:advisor' %}" class="nav-link">Advisor</a></div>
-        </nav>
-        <main>
-            <main>
-                <div style="width: 90%; margin: 0 auto;">
-                    <div class="main-container">
-                        {% for message in messages %}
-                            <p>{{message}}</p>
-                        {% endfor %}
-                        <h1>CleverTrack</h1>
-                        <h2>Makes eating healthy possible</h2>
-                        <div class="summary">
-                            <div class="metric proteins">
-                                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="160px" height="160px">
-                                    <defs>
-                                        <linearGradient id="GradientColor">
-                                            <stop offset="0%" stop-color="#30A5FE" />   
-                                            <stop offset="100%" stop-color="#00FFB3" /> 
-                                        </linearGradient>
-                                    </defs>
-                                    <circle id="2" data-value="{{total_proteins}}" cx="80" cy="80" r="70" stroke-linecap="round" />
-                                </svg>
-                                <div class="progress-bar">
-                                    <div class="outer">
-                                        <div class="inner">
-                                            <div id="protein-amount" data-value="{{proteins}}">{{total_proteins}}g proteins</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="metric carbs">
-                                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="160px" height="160px">
-                                    <defs>
-                                        <linearGradient id="GradientColor">
-                                            <stop offset="0%" stop-color="#30A5FE" />   
-                                            <stop offset="100%" stop-color="#00FFB3" /> 
-                                        </linearGradient>
-                                    </defs>
-                                    <circle id="3" data-value="{{total_carbs}}" cx="80" cy="80" r="70" stroke-linecap="round" />
-                                </svg>
-                                <div class="progress-bar">
-                                    <div class="outer">
-                                        <div class="inner">
-                                            <div id="carb-amount" data-value="{{carbs}}">{{total_carbs}}g carbs</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="metric fats">
-                                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="160px" height="160px">
-                                    <defs>
-                                        <linearGradient id="GradientColor">
-                                            <stop offset="0%" stop-color="#30A5FE" />   
-                                            <stop offset="100%" stop-color="#00FFB3" /> 
-                                    </defs>
-                                    <circle id="4" data-value="{{total_fats}}" cx="80" cy="80" r="70" stroke-linecap="round" />
-                                </svg>
-                                <div class="progress-bar">
-                                    <div class="outer">
-                                        <div class="inner">
-                                            <div id="fat-amount" data-value="{{total_fats}}">{{total_fats}}g fats</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <section>
-                            <div>
-                                <div class="buttons">
-                                    <form method="get" action="{% url 'backend:upload_photo' %}" class="meal-photo">
-                                        <button type="submit" class="meal-photo-btn">Upload a meal photo</button>
-                                    </form>
-                                    <form method="post" action="{% url 'backend:start_page' %}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="choose-meal-btn" id="openModalBtn">Choose saved meal</button>
-                                    </form>
-                                </div>
-                                {% if choose_meal %}
-                                <div id="mealModal" class="modal" style="display:block">
-                                    <div class="modal-content">
-                                        <span class="close">&times;</span>
-                                        <form id="mealSelect">
-                                        {% csrf_token %}
-                                        <select name="meal_id" id="meal_id">
-                                            {% for meal in saved_meals %}
-                                                <option value="{{ meal.name }}">{{ meal.name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <input type="submit" value="Load Meal">
-                                        </form>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div>
-                            <div id="loading" style="display:none;">
-                                <div class="spinner"></div>
-                                <p>Processing your image...</p>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-            </main>
-        <script>
-            document.getElementById('mealSelect').onsubmit = function(e) {
-                e.preventDefault();
-                var mealName = document.getElementById('meal_id').value;
-                window.location.href = '/meal_summary/' + encodeURIComponent(mealName);
-            };
-            function fillProgressBar(id, circle_id, max_value) {
-                circle = document.getAttributeById(circle_id)
-                const number = document.getElementById(id)
-                const target = parseInt(number.getAttribute("data-value"))
-                const circumference = 472
-                percent = number / target;
-                circle.style.strokeDashoffset = parseInt((1 -percent) * circumference)
-            }
-            const ids = [ "protein-amount", "carb-amount", "fat-amount"];
-            const circle_ids = [ "2", "3", "4"];
-            const maxValues =  [35, 75, 40];
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CleverTrack</title>
+    <link rel="stylesheet" href="{% static 'start_page.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="page-shell">
+        <div class="container">
+            <header>
+                <h1 class="main-title">CleverTrack</h1>
+                <p class="subtitle">Your daily nutrition dashboard.</p>
+            </header>
 
-            for (let i; i < ids.length; i++) {
-                fillProgressBar(ids[i], circle_ids[i], maxValues[i])
-            }
-        </script>
-    </body>
+            <nav class="nav-bar">
+                <a href="{% url 'backend:profile' %}" class="nav-link">My profile</a>
+                <a href="{% url 'backend:advisor' %}" class="nav-link">Advisor</a>
+                {% if request.user.is_authenticated %}
+                    <form method="post" action="{% url 'backend:logout' %}" class="logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link nav-button">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'backend:login' %}" class="nav-link">Login</a>
+                {% endif %}
+            </nav>
+
+            {% if messages %}
+                <div class="feature-card message-card">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <main class="dashboard-grid">
+                <section class="feature-card nutrition-panel">
+                    <h2>Today&apos;s Intake</h2>
+                    <div class="metrics-grid">
+                        <article class="metric-card">
+                            <h3>Calories</h3>
+                            <p class="metric-value">{{ total_calories }}</p>
+                            <p class="metric-goal">Goal: {{ user_daily_calories|floatformat:0 }}</p>
+                        </article>
+
+                        <article class="metric-card">
+                            <h3>Proteins</h3>
+                            <p class="metric-value">{{ total_proteins }}g</p>
+                            <p class="metric-goal">Goal: {{ user_daily_proteins|floatformat:0 }}g</p>
+                        </article>
+
+                        <article class="metric-card">
+                            <h3>Carbs</h3>
+                            <p class="metric-value">{{ total_carbs }}g</p>
+                            <p class="metric-goal">Goal: {{ user_daily_carbs|floatformat:0 }}g</p>
+                        </article>
+
+                        <article class="metric-card">
+                            <h3>Fats</h3>
+                            <p class="metric-value">{{ total_fats }}g</p>
+                            <p class="metric-goal">Goal: {{ user_daily_fats|floatformat:0 }}g</p>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="feature-card actions-panel">
+                    <div class="buttons">
+                        <form method="get" action="{% url 'backend:upload_photo' %}">
+                            <button type="submit" class="cta-button">Upload a meal photo</button>
+                        </form>
+
+                        <form method="post" action="{% url 'backend:start_page' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="cta-button">Choose saved meal</button>
+                        </form>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    {% if choose_meal %}
+    <div id="mealModal" class="modal" aria-modal="true" role="dialog">
+        <div class="modal-content feature-card">
+            <button type="button" class="close" aria-label="Close">&times;</button>
+            <h3>Choose a saved meal</h3>
+            <form id="mealSelect">
+                {% csrf_token %}
+                <select name="meal_id" id="meal_id">
+                    {% for meal in saved_meals %}
+                        <option value="{{ meal.name }}">{{ meal.name }}</option>
+                    {% empty %}
+                        <option value="">No saved meals yet</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="cta-button" {% if not saved_meals %}disabled{% endif %}>Load meal</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    <script>
+        const mealForm = document.getElementById('mealSelect');
+        const closeBtn = document.querySelector('.close');
+        const modal = document.getElementById('mealModal');
+
+        if (mealForm) {
+            mealForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const mealSelect = document.getElementById('meal_id');
+                const mealName = mealSelect ? mealSelect.value : '';
+                if (!mealName) {
+                    return;
+                }
+                const baseUrl = "{% url 'backend:meal_summary' 'PLACEHOLDER' %}";
+                window.location.href = baseUrl.replace('PLACEHOLDER', encodeURIComponent(mealName));
+            });
+        }
+
+        if (closeBtn && modal) {
+            closeBtn.addEventListener('click', function () {
+                modal.style.display = 'none';
+            });
+        }
+    </script>
+</body>
 </html>

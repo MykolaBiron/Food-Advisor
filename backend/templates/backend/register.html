@@ -1,26 +1,68 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login</title>
+  <meta charset="UTF-8">
+  <title>Register - CleverTrack</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'register.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" 
-        rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <main>
-    <h2>Register</h2>
-    {% if form.errors %}
-      <p style="color: red;">Invalid username or password</p>
-    {% endif %}
+  <div class="container">
+    <header>
+      <h1 class="main-title">CleverTrack</h1>
+      <p class="subtitle">Create your account to start tracking smarter.</p>
+    </header>
 
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Create an account</button>
-    </form>
-    <p>Already have an account? <a href="{% url 'backend:login' %}">Login here</a></p>
-  </main>
+    <main>
+      <section class="register-card">
+        <h2>Register</h2>
+
+        {% if form.non_field_errors %}
+          <div class="error-box">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <form method="post" class="register-form">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label for="id_username">Username</label>
+            <input
+              id="id_username"
+              name="username"
+              type="text"
+              maxlength="150"
+              value="{{ form.username.value|default_if_none:'' }}"
+              required
+            >
+            {% if form.username.errors %}
+              <div class="field-error">{{ form.username.errors|striptags }}</div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="id_password">Password</label>
+            <input
+              id="id_password"
+              name="password"
+              type="password"
+              required
+            >
+            {% if form.password.errors %}
+              <div class="field-error">{{ form.password.errors|striptags }}</div>
+            {% endif %}
+          </div>
+
+          <button type="submit" class="cta-button">Create an account</button>
+        </form>
+      </section>
+
+      <p class="login-text">
+        Already have an account?
+        <a href="{% url 'backend:login' %}">Login here</a>
+      </p>
+    </main>
+  </div>
 </body>
 </html>
