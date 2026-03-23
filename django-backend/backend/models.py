@@ -21,7 +21,7 @@ class FoodItem(models.Model):
 class Meal(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
-    date = models.DateTimeField(default=timezone.now().date())
+    date = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=200)
     saved = models.BooleanField(default=False)
     total_calories = models.FloatField(default=0)
