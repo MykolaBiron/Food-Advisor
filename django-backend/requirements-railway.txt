@@ -23,6 +23,7 @@ matplotlib==3.10.6
 # API calls
 requests==2.32.5
 nutritionix==0.2
+openai==2.29.0
 
 # Utilities
 python-dateutil==2.9.0.post0
