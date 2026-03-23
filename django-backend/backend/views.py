@@ -151,7 +151,11 @@ def upload_photo(request, option=None):
             #instance.carbs = calculate_carbs()
             #instance.fats = calculate_fats()
             instance.save()
-            prediction_info = make_prediction_path(instance.image.path)
+            try:
+                prediction_info = make_prediction_path(instance.image.path)
+            except RuntimeError as exc:
+                messages.error(request, f"Prediction is unavailable: {exc}")
+                return render(request, "backend/home_page.html", {"form": form})
             
             # Check if the model has enough confidence in prediction
             if check_is_food(prediction_info):

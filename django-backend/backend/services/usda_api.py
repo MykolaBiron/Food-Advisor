@@ -1,5 +1,8 @@
 import requests
 from django.conf import settings
+import environ
+
+env = environ.Env()
 
 BASE_URL = "https://api.nal.usda.gov/fdc/v1"
 USDA_API_KEY = "B2mbaLaSSz8MwVaSaGEVQdNiCMKRavVv8BpbZQYO"

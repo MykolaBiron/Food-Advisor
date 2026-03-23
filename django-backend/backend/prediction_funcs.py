@@ -1,6 +1,7 @@
 
 import sys
 import os
+from pathlib import Path
 import numpy as np
 import pandas as pd
 try:
@@ -16,16 +17,36 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "food_advisor.settings")
 django.setup()
 from backend.models import Image
 
-#Loading the model
+# Loading the model
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODEL_CANDIDATES = [
+    BASE_DIR / "ml_utils" / "models" / "4_layers_model.keras",
+    BASE_DIR / "ml_utils" / "models" / "multiple_layers_model_v2.keras",
+    BASE_DIR / "ml_utils" / "models" / "base_model.keras",
+]
+model_load_error = None
+
 if tf is not None:
-    try:
-        model = tf.keras.models.load_model("ml_utils/models/4_layers_model.keras")
-    except Exception as e:
-        print(f"Warning: Could not load model: {e}")
-        model = None
+    model = None
+    for model_path in MODEL_CANDIDATES:
+        if not model_path.exists():
+            continue
+        try:
+            model = tf.keras.models.load_model(str(model_path))
+            break
+        except Exception as e:
+            model_load_error = e
+
+    if model is None and model_load_error is None:
+        model_load_error = FileNotFoundError(
+            f"No model file found. Checked: {[str(p) for p in MODEL_CANDIDATES]}"
+        )
+    if model is None:
+        print(f"Warning: Could not load model: {model_load_error}")
 else:
     print("Warning: TensorFlow is not installed; using fallback predictions.")
     model = None
+    model_load_error = ImportError("TensorFlow is not installed")
 
 class_names = [
     "Apple pie",
@@ -136,8 +157,7 @@ def is_confident(prediction, threshold):
 
 def make_prediction_path(image_path:str):
     if model is None:
-        # Return a fallback prediction when model is not available
-        raise KeyError("Model not found")
+        raise RuntimeError(f"Model unavailable: {model_load_error}")
     
     image = PilImage.open(image_path).convert("RGB")
     image = np.array(image.resize(size=(224, 224)))

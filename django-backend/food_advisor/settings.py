@@ -14,9 +14,15 @@ from pathlib import Path
 import os
 import dj_database_url
 from decouple import config
+import environ
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env()
+environ.env.read_env(os.path.join(BASE_DIR, '.env'))
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -24,6 +30,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", default="(qr(%+r5@n+^e$oxfpgx+a1zp#$k75od%b87ef(-^_q^^#b*l2")
+USDA_API_KEY = environ.get("USDA_API_KEY", default="")
+OPENAI_KEY = environ.get("OPENAI_KEY", default="")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -157,4 +165,3 @@ else:
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
 
-USDA_API_KEY = config("USDA_API_KEY", default="")
