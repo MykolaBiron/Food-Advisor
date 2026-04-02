@@ -1,18 +1,45 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" 
-        rel="stylesheet">
-    </head>
-    <body>
-        <main>
-            <form method="post" action="{% url 'backend:create_profile' %}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Profile | CleverTrack</title>
+    <link rel="stylesheet" href="{% static 'create_profile.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main class="container">
+        <section class="profile-card">
+            <header class="profile-header">
+                <h1 class="main-title">Create Your Profile</h1>
+                <p class="subtitle">Set your baseline details so CleverTrack can personalize your nutrition targets.</p>
+            </header>
+
+            <form method="post" action="{% url 'backend:create_profile' %}" class="profile-form">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <input type="submit" value="Create profile">
+
+                {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="field-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <p class="field-error">{{ field.errors|striptags }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="cta-button">Create Profile</button>
             </form>
-        </main>
-    </body>
+        </section>
+    </main>
+</body>
 </html>

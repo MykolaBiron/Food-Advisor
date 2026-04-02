@@ -116,7 +116,7 @@ def landing_page(request):
 def start_page(request):
     # Get all user meals and sum up calories and nutrients
     saved_meals = Meal.objects.filter(user=request.user, saved=True)
-    today_meals = Meal.objects.filter(user=request.user, date=timezone.now().date())
+    today_meals = Meal.objects.filter(user=request.user, date__date=timezone.localdate())
     total_calories = np.round(sum([meal.total_calories for meal in today_meals]), 2)
     total_proteins = np.round(sum([meal.total_proteins for meal in today_meals]), 2)
     total_carbs = np.round(sum([meal.total_carbs for meal in today_meals]), 2)
