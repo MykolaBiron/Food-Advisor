@@ -31,6 +31,18 @@ class ProfileCreationForm(forms.ModelForm):
         fields = ["age", "sex", "weight", "height", 
                   "activity", "num_workouts", "goal"]
 
+
+class WeightEntryForm(forms.Form):
+    weight = forms.FloatField(
+        min_value=30,
+        max_value=200,
+        label="Update weight (kg)",
+        widget=forms.NumberInput(attrs={
+            "step": "0.1",
+            "placeholder": "Enter current weight",
+        }),
+    )
+
 class CorrectPredictionForm(forms.ModelForm):
     correct_prediction = forms.CharField(
         label="",  # Empty label removes the text

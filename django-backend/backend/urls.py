@@ -7,9 +7,10 @@ from django.contrib.auth import views as auth_views
 app_name = "backend"
 
 urlpatterns = [
-    path("landing_page/", views.landing_page, name="landing_page"),
+    path("", views.landing_page, name="landing_page"),
+    path("landing_page/", views.landing_page, name="landing_page_legacy"),
     path("upload_photo", views.upload_photo, name="upload_photo"),
-    path("", views.start_page, name="start_page"),
+    path("dashboard/", views.start_page, name="start_page"),
     path("profile", views.profile, name="profile"),
     path("create_profile", views.create_profile, name="create_profile"),
     path("advisor", views.advisor, name="advisor"),

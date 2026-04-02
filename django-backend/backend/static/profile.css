@@ -118,6 +118,70 @@ header {
     display: block;
 }
 
+.message-stack {
+    margin-bottom: 0.9rem;
+}
+
+.message-item {
+    border: 1px solid rgba(0, 255, 204, 0.35);
+    background: rgba(0, 255, 204, 0.08);
+    color: #cffff6;
+    border-radius: 8px;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.92rem;
+}
+
+.weight-update-form {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.weight-update-form label {
+    color: #d3d3d3;
+    font-weight: 500;
+}
+
+.weight-update-form input {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+    padding: 0.72rem 0.85rem;
+    font-size: 1rem;
+}
+
+.weight-update-form input:focus {
+    outline: none;
+    border-color: rgba(0, 255, 204, 0.9);
+    box-shadow: 0 0 0 3px rgba(0, 255, 204, 0.2);
+}
+
+.update-button {
+    border: 0;
+    border-radius: 999px;
+    padding: 0.66rem 1.2rem;
+    width: fit-content;
+    background: linear-gradient(135deg, #00ffcc 0%, #00ccff 100%);
+    color: #000;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 255, 204, 0.26);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.update-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 255, 204, 0.35);
+}
+
+.form-error {
+    color: #ff8d8d;
+    font-size: 0.85rem;
+}
+
 @media (max-width: 900px) {
     .container {
         padding: 1rem;
@@ -137,5 +201,9 @@ header {
 
     .nav-bar {
         flex-wrap: wrap;
+    }
+
+    .update-button {
+        width: 100%;
     }
 }

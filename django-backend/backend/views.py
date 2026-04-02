@@ -3,6 +3,7 @@ import pandas as pd
 from django.shortcuts import render, redirect
 from .forms import ImageForm, UserCreationForm, FoodOptionsForm, ProfileCreationForm
 from .forms import CorrectPredictionForm
+from .forms import WeightEntryForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -13,6 +14,7 @@ from .models import Image, Meal, FoodItem, Profile, WeightEntry
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import os 
 from django.utils import timezone
 from .services.usda_api import search_food, extract_nutritions
@@ -66,20 +68,25 @@ def calculate_daily_fats(height, weight, sex, age,  goal, num_workouts):
     return fats_intake / 9
 
 def generate_weight_graph(weight_history, weight_dates, profile):
-    if len(weight_history) != 0:
-        fig, ax = plt.subplots(figsize=(6.5, 2.6))
-        ax.set_facecolor("#333")
-        ax.tick_params(axis='x', colors="#BBBBC4")
-        ax.tick_params(axis='y', colors="#BBBBC4")
-        ax.plot(weight_dates, weight_history, linewidth=3, color="#30A5FE")
-        weight_dates = np.array(weight_dates)
-        ax.set_xticks(np.linspace(weight_dates.min(), weight_dates.max(), 3))
-        os.makedirs("static/images", exist_ok=True)
-        plt.savefig("static/images/weight_graph.jpg", facecolor="#333")
+    fig, ax = plt.subplots(figsize=(6.5, 2.6))
+    ax.set_facecolor("#333")
+    ax.tick_params(axis='x', colors="#BBBBC4")
+    ax.tick_params(axis='y', colors="#BBBBC4")
+
+    if weight_history:
+        ax.plot(weight_dates, weight_history, marker="o", linewidth=3, color="#30A5FE")
+        ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%d %b"))
     else:
-        plt.plot(0, profile.weight)
-        os.makedirs("static/images", exist_ok=True)
-        plt.savefig("static/images/weight_graph.jpg", facecolor="#333")
+        # Show current profile weight when no history entries exist yet.
+        ax.plot([timezone.localtime()], [profile.weight], marker="o", linewidth=3, color="#30A5FE")
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%d %b"))
+
+    fig.autofmt_xdate()
+    fig.tight_layout()
+    os.makedirs("static/images", exist_ok=True)
+    plt.savefig("static/images/weight_graph.jpg", facecolor="#333")
+    plt.close(fig)
     return 
 
 def add_nutrition_info(context, meal):
@@ -284,11 +291,24 @@ def profile(request):
         profile = Profile.objects.get(user=request.user)
     except Profile.DoesNotExist:
         return redirect("backend:create_profile")
-    weight_entries = WeightEntry.objects.filter(profile=request.user.profile)
-    weight_history = [weight_entry.weight for weight_entry in weight_entries]
+
+    weight_form = WeightEntryForm(initial={"weight": profile.weight})
+    if request.method == "POST":
+        weight_form = WeightEntryForm(request.POST)
+        if weight_form.is_valid():
+            new_weight = weight_form.cleaned_data["weight"]
+            WeightEntry.objects.create(profile=profile, weight=new_weight)
+            profile.weight = new_weight
+            profile.save(update_fields=["weight"])
+            messages.success(request, "Weight updated successfully.")
+            return redirect("backend:profile")
+        messages.error(request, "Please enter a valid weight between 30 and 200 kg.")
+
+    weight_entries = WeightEntry.objects.filter(profile=profile).order_by("date_updated")
+    weight_data = [weight_entry.weight for weight_entry in weight_entries]
     weight_dates = [weight_entry.date_updated for weight_entry in weight_entries]
-    generate_weight_graph(weight_history, weight_dates, profile)
-    context = {"profile": profile}
+    generate_weight_graph(weight_data, weight_dates, profile)
+    context = {"profile": profile, "weight_form": weight_form}
     return render(request, "backend/profile.html", context)
 
 def advisor(request):
