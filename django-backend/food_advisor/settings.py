@@ -44,6 +44,7 @@ CSRF_TRUSTED_ORIGINS = ["https://food-advisor-production-3924.up.railway.app"]
 
 INSTALLED_APPS = [
     'backend',
+    'djangorestframework'
     # Default apps
     'django.contrib.admin',
     'django.contrib.auth',
