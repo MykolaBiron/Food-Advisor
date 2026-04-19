@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import login
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -20,6 +21,7 @@ from .views import (
 
 @api_view(["PATCH"])
 def save_meal_api(request, meal_id):
+    permission_classes = [IsAuthenticated]
     meal = get_object_or_404(Meal, id=meal_id, user=request.user)
 
     if meal.saved:
@@ -34,6 +36,7 @@ def save_meal_api(request, meal_id):
 
 
 class CreateProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
     """Creates a profile based on the user input. Returns a serialized json response"""
     def post(self, request):
         serializer = CreateProfileSerializer(data=request.POST)
@@ -84,3 +87,5 @@ class RegisterView(APIView):
              status=status.HTTP_201_CREATED
         )
     
+class LoginView(APIView):
+    def post(self, request):
