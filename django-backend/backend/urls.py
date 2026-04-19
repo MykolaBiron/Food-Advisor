@@ -9,7 +9,7 @@ app_name = "backend"
 urlpatterns = [
     path("", views.landing_page, name="landing_page"),
     path("landing_page/", views.landing_page, name="landing_page_legacy"),
-    path("upload_photo", views.upload_photo, name="upload_photo"),
+    path("upload-photo", views.upload_photo, name="upload_photo"),
     path("dashboard/", views.start_page, name="start_page"),
     path("profile", views.profile, name="profile"),
     path("create_profile", views.create_profile, name="create_profile"),
@@ -21,7 +21,8 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("meal_summary/<str:option>", views.meal_summary, name="meal_summary"),
     path("save_meal/<int:meal_id>", views.save_meal, name="save_meal"),
-    path("correct_prediction/<str:meal_name>", views.correct_prediction, name="correct_prediction")
+    path("correct_prediction/<str:meal_name>", views.correct_prediction, name="correct_prediction"),
+    path("scan-barcode", views.scan_barcode, name="scan_barcode")
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -17,7 +17,7 @@
             </header>
 
             <nav class="nav-bar">
-                <a href="{% url 'backend:profile' %}" class="nav-link">My profile</a>
+                <a href="{% url 'backend:profile' %}" c lass="nav-link">My profile</a>
                 <a href="{% url 'backend:advisor' %}" class="nav-link">Advisor</a>
                 {% if request.user.is_authenticated %}
                     <form method="post" action="{% url 'backend:logout' %}" class="logout-form">
@@ -76,6 +76,10 @@
                         <form method="post" action="{% url 'backend:start_page' %}">
                             {% csrf_token %}
                             <button type="submit" class="cta-button">Choose saved meal</button>
+                        </form>
+                        <form method="post" action="{% url 'backend:start_page' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="cta-button">Scan Barcode</button>
                         </form>
                     </div>
                 </section>

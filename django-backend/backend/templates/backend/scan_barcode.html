@@ -1,0 +1,72 @@
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'home_page.css' %}">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" 
+        rel="stylesheet">
+    </head>
+    <body>
+        <nav>
+            {% if request.user.is_authenticated %}
+                <div class="login" class="nav-link"><a href="{% url 'backend:login' %}">Login</a></div>
+            {% else %}
+                <div class="login" class="nav-link"><a href="{% url 'backend:logout' %}">Logout</a></div>
+            {% endif %}
+            <div class="profile"><a href="{% url 'backend:profile' %}" class="nav-link">My profile</a></div>
+            <div class="advisor"><a href="{% url 'backend:start_page' %}" class="nav-link">Home</a></div>
+        </nav>
+        <main>
+            <div>
+                {% for meassage in messages %}
+                    <p>{{message}}</p>
+                {% endfor %}
+                <h1>CleverTrack</h1>
+            <h2>Makes eating healthy possible</h2>
+            <div>
+                <form method="post" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+                    {% csrf_token %}
+                    <div class="upload-area">
+                        <div class="upload-icon">
+                            <!-- Photo SVG icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 48 48">
+                                <circle cx="24" cy="24" r="22" fill="#fff" stroke="#b3e0ff" stroke-width="2"/>
+                                <rect x="14" y="18" width="20" height="14" rx="3" fill="#b3e0ff"/>
+                                <circle cx="24" cy="25" r="4" fill="#fff"/>
+                                <rect x="18" y="22" width="6" height="4" rx="2" fill="#6c63ff"/>
+                            </svg>
+                        </div>
+                        <div class="upload-text">
+                            <span class="upload-title">Drag your <b>Photo</b> here</span><br>
+                            <span class="upload-desc">or click to select a file</span>
+                        </div>
+                        {{form.image}}
+                    </div>
+                    <input type="submit" value="Upload">
+                </form>
+                <div id="loading" style="display:none;">
+                    <div class="spinner"></div>
+                    <p>Processing your image...</p>
+                </div>
+                <div class="meal-options">
+                    {% for option in options %}
+                    <form type="submit" action="{% url 'backend:meal_summary' option %}">
+                        <button class="option op">{{option}}</button>
+                    </form>
+                    {% endfor %}
+                </div>
+            </div>
+            </div>  
+        </main>
+        <script>
+            const form = document.getElementById("uploadForm");
+            const loading = document.getElementById("loading");
+            const result = document.getElementById("result");
+
+            form.addEventListener("submit", function() {
+                loading.style.display = "block";   // show spinner
+            });
+        </script>
+    </body>
+</html>

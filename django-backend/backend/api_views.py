@@ -1,3 +1,4 @@
+import requests
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import login
@@ -87,3 +88,24 @@ class RegisterView(APIView):
              status=status.HTTP_201_CREATED
         )
 
+class BarcodeLookupView(APIView):
+    def post(self, request):
+        barcode = request.data.get('barcode')
+        if not barcode:
+            return Response({"Error": "No barcode provided"}, status=400)
+        
+        url = ""
+        response = requests.get(url)
+        data = response.json()
+
+        if data.get('status') == 1:
+            product = data['product']
+            result = {
+                "name": product.get('product_name'),
+                "calories": product.get('nutriments', {}).get('energy-kcal_100g'),
+                "protein": product.get('nutriments', {}).get('proteins_100g'),
+                "brand": product.get('brands')
+            }
+            return Response(result, status=200)
+        
+        return Response({"Error": "Product not found"}, status=404)

@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import requests
 from django.shortcuts import render, redirect
 from .forms import ImageForm, UserCreationForm, FoodOptionsForm, ProfileCreationForm
 from .forms import CorrectPredictionForm
@@ -148,7 +149,7 @@ def start_page(request):
 
 
 @login_required
-def upload_photo(request, option=None):
+def upload_photo(request, option=None, type="image"):
     is_food = False
 
     form = ImageForm()
@@ -197,6 +198,78 @@ def upload_photo(request, option=None):
 
     context = {"form": form}
     return render(request, "backend/home_page.html", context)
+
+
+def decode_barcode_from_image(image_path):
+    img = PilImage.open(image_path)
+    decoded = decode(img)
+    if not decoded:
+        return None
+    return decoded[0].data.decode("utf-8")
+
+def lookup_food_by_barcode(barcode):
+    url = f"https://world.openfoodfacts.org/api/v0/product/{barcode}.json"
+    response = requests.get(url, timeout=10)
+    response.raise_for_status()
+    data = response.json()
+
+    if data.get("status") != 1:
+        return None
+    
+    product = data.get("product", {})
+    nutriments = product.get("nutriments", {})
+    return {
+        "name": product.get("product_name") or product.get("generic_name") or "Unknown product",
+        "calories": float(nutriments.get("energy-kcal_100g") or 0),
+        "proteins": float(nutriments.get("proteins_100g") or 0),
+        "carbs": float(nutriments.get("carbohydrates_100g") or 0),
+        "fats": float(nutriments.get("fat_100g") or 0),
+    }
+
+
+@login_required
+def scan_barcode(request):
+    form = ImageForm()
+
+    if request.method == "POST":
+        form = ImageForm(request.POST, request.FILES)
+        if not form.is_valid():
+            return render(request, "backend/scan_barcode.html", {"form": form})
+        
+        image_instance = form.save(commit=False)
+        image_instance.user = request.user
+        image_instance.save()
+
+        barcode = decode_barcode_from_image(image_instance.image.path)
+        if not barcode:
+            messages.error(request, "NO barcode detected in the image")
+            return render(request, "backend/scan_barcode.html", {"form": form})
+        
+        try:
+            food_data = lookup_food_by_barcode(barcode)
+        except requests.RequestException:
+            messages.error(request, "Barcode lookup service is unavailable")
+            return render(request, "backend/scan_barcode.html", {"form": form})
+        
+        if not food_data:
+            messages.error(request, "Product not found for this barcode")
+            return render(request, "backend/scan_barcode.html", {"form": form})
+        
+        meal = Meal.objects.create(
+            user = request.user,
+            image = image_instance,
+            name = food_data["name"],
+            total_calories = food_data["calories"],
+            total_proteins = food_data["proteins"],
+            total_carbs = food_data["carbs"],
+            total_fats = food_data["fats"],
+        )
+        return redirect("backend:meal_summary")
+    
+    return render(request, "backend/scan_barcode.html", {"form": form})
+
+
+
 
 @login_required
 def save_meal(request, meal_id):
