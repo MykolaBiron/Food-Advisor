@@ -45,6 +45,7 @@ CSRF_TRUSTED_ORIGINS = ["https://food-advisor-production-3924.up.railway.app"]
 INSTALLED_APPS = [
     'backend',
     'rest_framework',
+    'rest_framework_simplejwt',
     # Default apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -87,6 +88,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'food_advisor.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
