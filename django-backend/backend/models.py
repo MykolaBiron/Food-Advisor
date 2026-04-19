@@ -18,6 +18,9 @@ class FoodItem(models.Model):
     carbs_per_100g = models.FloatField(default=0)
     fats_per_100g = models.FloatField(default=0)
 
+    def __str__(self):
+        return f"calories: {self.calories_per_100g}"
+
 class Meal(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
