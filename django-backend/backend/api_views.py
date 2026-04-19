@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
-from django.cotrib.auth import User
+from django.contrib.auth.models import User
 from .models import Meal
 from .models import Profile
 from .serializers import ProfileSerializer
@@ -86,6 +86,4 @@ class RegisterView(APIView):
              "user" : {"id": user.id, "username": user.usrename}},
              status=status.HTTP_201_CREATED
         )
-    
-class LoginView(APIView):
-    def post(self, request):
+

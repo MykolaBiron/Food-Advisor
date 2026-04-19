@@ -33,8 +33,8 @@ class CreateProfileSerializer(serializers.Serializer):
     height = serializers.IntegerField(min_value=50, max_value=230)
     weight = serializers.FloatField(min_value=5, max_value=180)
     age = serializers.IntegerField(min_value=5, max_value=120)
-    sex = serializers.ChoiceField(choices=Profile.sex.choices)
-    activity = serializers.ChoiceField(choices=Profile.activity.choices)
+    sex = serializers.ChoiceField(choices=Profile.Sex.choices)
+    activity = serializers.ChoiceField(choices=Profile.Activity.choices)
     num_workouts = serializers.ChoiceField(choices=Profile.NumWorkouts.choices)
     goal = serializers.ChoiceField(choices=Profile.Goal.choices)
 
