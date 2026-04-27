@@ -201,11 +201,21 @@ def upload_photo(request, option=None, type="image"):
 
 
 def decode_barcode_from_image(image_path):
-    img = PilImage.open(image_path)
-    decoded = decode(img)
+    try:
+        from pyzbar.pyzbar import decode
+    except (ImportError, OSError):
+        return None, "Barcode decoder is not available (missing zbar library)."
+
+    try:
+        img = PilImage.open(image_path)
+        decoded = decode(img)
+    except Exception:
+        return None, "Failed to read or decode the uploaded image."
+
     if not decoded:
-        return None
-    return decoded[0].data.decode("utf-8")
+        return None, "No barcode detected in the image."
+
+    return decoded[0].data.decode("utf-8"), None
 
 def lookup_food_by_barcode(barcode):
     url = f"https://world.openfoodfacts.org/api/v0/product/{barcode}.json"
@@ -240,9 +250,9 @@ def scan_barcode(request):
         image_instance.user = request.user
         image_instance.save()
 
-        barcode = decode_barcode_from_image(image_instance.image.path)
-        if not barcode:
-            messages.error(request, "NO barcode detected in the image")
+        barcode, decode_error = decode_barcode_from_image(image_instance.image.path)
+        if decode_error:
+            messages.error(request, decode_error)
             return render(request, "backend/scan_barcode.html", {"form": form})
         
         try:
@@ -264,11 +274,9 @@ def scan_barcode(request):
             total_carbs = food_data["carbs"],
             total_fats = food_data["fats"],
         )
-        return redirect("backend:meal_summary")
+        return redirect("backend:meal_summary", option=meal.name)
     
     return render(request, "backend/scan_barcode.html", {"form": form})
-
-
 
 
 @login_required
